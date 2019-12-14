@@ -383,8 +383,10 @@ def main():
             'best_prec1': best_prec1,
             'best_epoch': best_epoch
         }
-        if (n + 1) % 5 == 0 or (n + 1) == MAX_EPOCH:
-            torch.save(save_data, os.path.join(cfg.OUTPUT_DIR, 'model_%04d.pth' % (n + 1)))
+
+        path = os.path.join(cfg.OUTPUT_DIR, 'model_%04d.pth' % (n + 1))
+        print("Saving checkpoint at {}".format(path))
+        torch.save(save_data, path)
 
         if is_best:
             torch.save(save_data, os.path.join(cfg.OUTPUT_DIR, 'model_best.pth'))
