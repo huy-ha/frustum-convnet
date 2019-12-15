@@ -8,6 +8,7 @@ import time
 import cv2
 import numpy as np
 from PIL import Image
+from multiprocessing import Process
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(BASE_DIR)
@@ -863,22 +864,31 @@ if __name__ == '__main__':
         type_whitelist = ['Car', 'Pedestrian', 'Cyclist']
         output_prefix = 'frustum_carpedcyc_'
 
+    processes = []
     if args.gen_train:
-        extract_frustum_data(
+        processes.append(Process(
+            target=lambda:extract_frustum_data(
             os.path.join(BASE_DIR, 'image_sets/train.txt'),
             'training',
             os.path.join(save_dir, output_prefix + 'train.pickle'),
             perturb_box2d=True, augmentX=5,
             type_whitelist=type_whitelist)
+        ))
+        processes[-1].start()
+
 
     # TODO only use gt box 2d
     if args.gen_val:
-        extract_frustum_data(
+        processes.append(Process(
+            target=lambda:extract_frustum_data(
             os.path.join(BASE_DIR, 'image_sets/val.txt'),
             'training',
             os.path.join(save_dir, output_prefix + 'val.pickle'),
             perturb_box2d=False, augmentX=1,
             type_whitelist=type_whitelist, remove_diff=True)
+        ))
+        processes[-1].start()
+        
 
     if args.gen_val_det:
 
@@ -889,14 +899,17 @@ if __name__ == '__main__':
         else:
             assert False
 
-        extract_frustum_det_data(
+        processes.append(Process(
+            target=lambda:extract_frustum_det_data(
             os.path.join(BASE_DIR, 'image_sets/val.txt'),
             'training',
             os.path.join(save_dir, output_prefix + 'val_det.pickle'),
             res_label_dir,
             perturb_box2d=False, augmentX=1,
             type_whitelist=type_whitelist, remove_diff=True)
-
+        ))
+        processes[-1].start()
+        
     if args.gen_val_rgb_detection:
         if args.people_only:
             res_label_dir = './output/people_train/val_nms/result/data'
@@ -904,8 +917,8 @@ if __name__ == '__main__':
             res_label_dir = './output/car_train/val_nms/result/data'
         else:
             assert False
-
-        extract_frustum_data_rgb_detection(
+        processes.append(Process(
+            target=lambda:extract_frustum_data_rgb_detection(
             os.path.join(BASE_DIR, 'image_sets/val.txt'),
             'training',
             os.path.join(save_dir, output_prefix +
@@ -913,6 +926,9 @@ if __name__ == '__main__':
             res_label_dir,
 
             type_whitelist=type_whitelist)
+        ))
+        processes[-1].start()
+        
 
     if args.gen_from_folder:
 
@@ -921,10 +937,17 @@ if __name__ == '__main__':
         save_dir = os.path.join(res_label_dir, '..')
 
         # TODO support any image set
-        extract_frustum_data_rgb_detection(
+        processes.append(Process(
+            target=lambda:extract_frustum_data_rgb_detection(
             os.path.join(BASE_DIR, 'image_sets/val.txt'),
             'training',
             os.path.join(save_dir, output_prefix + postfix),
             res_label_dir,
             type_whitelist=type_whitelist)
+        ))
+        processes[-1].start()
+    
+    for p in processes:
+        p.join()
+        
 
