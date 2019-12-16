@@ -333,6 +333,9 @@ if __name__ == '__main__':
     collate_fn = dataset_def.collate_fn
     dataset_def = dataset_def.ProviderDataset
 
+    prefix='wang'
+    print("Using prefix {}".format(prefix))
+
     # overwritten_data_path = None
     # if cfg.OVER_WRITE_TEST_FILE and cfg.FROM_RGB_DET:
     #     overwritten_data_path = cfg.OVER_WRITE_TEST_FILE
@@ -344,7 +347,8 @@ if __name__ == '__main__':
         random_shift=False,
         one_hot=True,
         from_rgb_detection=cfg.FROM_RGB_DET,
-        overwritten_data_path=cfg.OVER_WRITE_TEST_FILE)
+        overwritten_data_path=cfg.OVER_WRITE_TEST_FILE,
+        prefix=prefix)
 
     test_loader = torch.utils.data.DataLoader(
         test_dataset,

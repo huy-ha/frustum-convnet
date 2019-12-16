@@ -53,6 +53,11 @@ def parse_args():
         default=None,
         nargs=argparse.REMAINDER
     )
+    parser.add_argument(
+        '--prefix',
+        default='',
+        type=str
+    )
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -214,6 +219,8 @@ def main():
 
     assert_and_infer_cfg()
 
+    prefix='gan_pl'
+
     if not os.path.exists(cfg.OUTPUT_DIR):
         os.makedirs(cfg.OUTPUT_DIR)
 
@@ -250,13 +257,16 @@ def main():
     collate_fn = dataset_def.collate_fn
     dataset_def = dataset_def.ProviderDataset
 
+    print("Using prefix {}".format(prefix))
+
     train_dataset = dataset_def(
         cfg.DATA.NUM_SAMPLES,
         split=cfg.TRAIN.DATASET,
         one_hot=True,
         random_flip=True,
         random_shift=True,
-        extend_from_det=cfg.DATA.EXTEND_FROM_DET)
+        extend_from_det=cfg.DATA.EXTEND_FROM_DET,
+        prefix=prefix)
 
     train_loader = torch.utils.data.DataLoader(
         train_dataset,
@@ -273,7 +283,8 @@ def main():
         one_hot=True,
         random_flip=False,
         random_shift=False,
-        extend_from_det=cfg.DATA.EXTEND_FROM_DET)
+        extend_from_det=cfg.DATA.EXTEND_FROM_DET,
+        prefix=prefix)
 
     val_loader = torch.utils.data.DataLoader(
         val_dataset,
@@ -348,7 +359,7 @@ def main():
             logger.info("=> loaded checkpoint '{}' (epoch {})".format(cfg.TRAIN.WEIGHTS, checkpoint['epoch']))
         else:
             logger.error("=> no checkpoint found at '{}'".format(cfg.TRAIN.WEIGHTS))
-
+        print("Resuming from epoch {} using weights {}".format(start_epoch,cfg.TRAIN.WEIGHTS))
         # resume from other pretrained model
         if start_epoch == cfg.TRAIN.MAX_EPOCH:
             start_epoch = 0

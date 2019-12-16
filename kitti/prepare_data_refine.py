@@ -841,6 +841,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--gen_from_folder', default=None,
                         type=str, help='Generate frustum data from folder')
+    parser.add_argument('--prefix', default='', type=str, help='prefix in front of generated pickle file')
 
     args = parser.parse_args()
 
@@ -863,6 +864,7 @@ if __name__ == '__main__':
     else:
         type_whitelist = ['Car', 'Pedestrian', 'Cyclist']
         output_prefix = 'frustum_carpedcyc_'
+    output_prefix = args.prefix +'_' + output_prefix
 
     processes = []
     if args.gen_train:
@@ -895,7 +897,7 @@ if __name__ == '__main__':
         if args.people_only:
             res_label_dir = './output/people_train/val_nms/result/data'
         elif args.car_only:
-            res_label_dir = './output/car_train/val_nms/result/data'
+            res_label_dir = './output/gt_car_train/val_nms/result/data'
         else:
             assert False
 
@@ -914,7 +916,7 @@ if __name__ == '__main__':
         if args.people_only:
             res_label_dir = './output/people_train/val_nms/result/data'
         elif args.car_only:
-            res_label_dir = './output/car_train/val_nms/result/data'
+            res_label_dir = './output/gt_car_train/val_nms/result/data'
         else:
             assert False
         processes.append(Process(

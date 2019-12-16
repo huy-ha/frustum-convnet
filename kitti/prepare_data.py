@@ -614,6 +614,7 @@ if __name__ == '__main__':
     parser.add_argument('--car_only', action='store_true', help='Only generate cars')
     parser.add_argument('--people_only', action='store_true', help='Only generate peds and cycs')
     parser.add_argument('--save_dir', default=None, type=str, help='data directory to save data')
+    parser.add_argument('--prefix', default='', type=str, help='prefix in front of generated pickle file')
 
     args = parser.parse_args()
 
@@ -638,6 +639,7 @@ if __name__ == '__main__':
     else:
         type_whitelist = ['Car', 'Pedestrian', 'Cyclist']
         output_prefix = 'frustum_carpedcyc_'
+    output_prefix = args.prefix + '_' + output_prefix
     processes = []
     if args.gen_train:
         processes.append(Process(
