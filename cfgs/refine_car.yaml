@@ -38,3 +38,4 @@ USE_TFBOARD: True
 NUM_WORKERS: 4
 FROM_RGB_DET: True
 disp: 100
+PREFIX: 'gan_pl'

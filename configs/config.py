@@ -179,6 +179,8 @@ __C.USE_TFBOARD = False
 
 __C.EVAL_MODE = False
 
+__C.PREFIX = 'gan_pl'
+
 # evaluation iou threshold, car 0.7, people 0.5
 __C.IOU_THRESH = 0.7
 
