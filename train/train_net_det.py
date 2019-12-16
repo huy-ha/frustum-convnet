@@ -219,8 +219,6 @@ def main():
 
     assert_and_infer_cfg()
 
-    prefix='gan_pl'
-
     if not os.path.exists(cfg.OUTPUT_DIR):
         os.makedirs(cfg.OUTPUT_DIR)
 
@@ -257,7 +255,7 @@ def main():
     collate_fn = dataset_def.collate_fn
     dataset_def = dataset_def.ProviderDataset
 
-    print("Using prefix {}".format(prefix))
+    print("Using prefix {}".format(cfg.PREFIX))
 
     train_dataset = dataset_def(
         cfg.DATA.NUM_SAMPLES,
@@ -266,7 +264,7 @@ def main():
         random_flip=True,
         random_shift=True,
         extend_from_det=cfg.DATA.EXTEND_FROM_DET,
-        prefix=prefix)
+        prefix=cfg.PREFIX)
 
     train_loader = torch.utils.data.DataLoader(
         train_dataset,
@@ -284,7 +282,7 @@ def main():
         random_flip=False,
         random_shift=False,
         extend_from_det=cfg.DATA.EXTEND_FROM_DET,
-        prefix=prefix)
+        prefix=cfg.PREFIX)
 
     val_loader = torch.utils.data.DataLoader(
         val_dataset,
