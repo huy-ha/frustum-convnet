@@ -893,11 +893,10 @@ if __name__ == '__main__':
         
 
     if args.gen_val_det:
-
         if args.people_only:
             res_label_dir = './output/people_train/val_nms/result/data'
         elif args.car_only:
-            res_label_dir = './output/gt_car_train/val_nms/result/data'
+            res_label_dir = './output/{}_car_train/val_nms/result/data'.format(args.prefix)
         else:
             assert False
 
@@ -916,7 +915,7 @@ if __name__ == '__main__':
         if args.people_only:
             res_label_dir = './output/people_train/val_nms/result/data'
         elif args.car_only:
-            res_label_dir = './output/gt_car_train/val_nms/result/data'
+            res_label_dir = './output/{}_car_train/val_nms/result/data'.format(args.prefix)
         else:
             assert False
         processes.append(Process(
@@ -933,7 +932,6 @@ if __name__ == '__main__':
         
 
     if args.gen_from_folder:
-
         res_label_dir = args.gen_from_folder
         postfix = 'val_rgb_detection_refine.pickle'
         save_dir = os.path.join(res_label_dir, '..')
