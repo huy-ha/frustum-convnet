@@ -41,7 +41,7 @@ class ProviderDataset(Dataset):
                  one_hot=True,
                  from_rgb_detection=False,
                  overwritten_data_path='',
-                 extend_from_det=False):
+                 extend_from_det=False,prefix=''):
 
         super(ProviderDataset, self).__init__()
         self.npoints = npoints
@@ -62,20 +62,20 @@ class ProviderDataset(Dataset):
                     split += '_det'
                     
                 if car_only:
-                    overwritten_data_path = os.path.join(root_data, 'frustum_caronly_%s.pickle' % (split))
+                    overwritten_data_path = os.path.join(root_data, '%s_frustum_caronly_%s.pickle' % (prefix,split))
                 elif people_only:
-                    overwritten_data_path = os.path.join(root_data, 'frustum_pedcyc_%s.pickle' % (split))
+                    overwritten_data_path = os.path.join(root_data, '%s_frustum_pedcyc_%s.pickle' % (prefix,split))
                 else:
-                    overwritten_data_path = os.path.join(root_data, 'frustum_carpedcyc_%s.pickle' % (split))
+                    overwritten_data_path = os.path.join(root_data, '%s_frustum_carpedcyc_%s.pickle' % (prefix,split))
             else:
                 if car_only:
                     overwritten_data_path = os.path.join(root_data,
-                                                         'frustum_caronly_%s_rgb_detection_refine.pickle' % (split))
+                                                         '%s_frustum_caronly_%s_rgb_detection_refine.pickle' % (prefix,split))
                 elif people_only:
-                    overwritten_data_path = os.path.join(root_data, 'frustum_pedcyc_%s_rgb_detection_refine.pickle' % (split))
+                    overwritten_data_path = os.path.join(root_data, '%s_frustum_pedcyc_%s_rgb_detection_refine.pickle' % (prefix,split))
                 else:
                     overwritten_data_path = os.path.join(
-                        root_data, 'frustum_carpedcyc_%s_rgb_detection_refine.pickle' % (split))
+                        root_data, '%s_frustum_carpedcyc_%s_rgb_detection_refine.pickle' % (prefix,split))
 
         if from_rgb_detection:
             with open(overwritten_data_path, 'rb') as fp:
